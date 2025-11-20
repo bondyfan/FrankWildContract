@@ -12,10 +12,24 @@
     font-size: 12pt;
     position: relative;
     /* Ensure content doesn't fly out if it gets too long */
-    height: auto; 
-    overflow: visible;
+    height: 297mm; 
+    overflow: hidden; /* Hide overflow to enforce page limits visually */
     word-wrap: break-word;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Číslování stránek */
+.page-number {
+    position: absolute;
+    bottom: 10mm;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 10pt;
+    color: #666;
+    pointer-events: none;
 }
 
 /* Styly pro vyplněná data v náhledu */
@@ -31,8 +45,6 @@
 @media print {
     body { 
         background: white; 
-        height: auto;
-        overflow: visible;
     }
     .no-print { 
         display: none !important; 
@@ -49,13 +61,25 @@
         margin: 0;
     }
 
+    #pagesContainer {
+        display: block;
+    }
+
     .a4-page {
         width: 100%;
-        min-height: 0;
+        height: 297mm;
         margin: 0;
         box-shadow: none;
         padding: 20mm;
         border: none;
+        page-break-after: always;
+        break-after: page;
+        overflow: visible; /* Allow print to handle overflow if slightly off */
+    }
+    
+    .a4-page:last-child {
+        page-break-after: auto;
+        break-after: auto;
     }
     
     .filled-data {
@@ -64,7 +88,7 @@
     
     @page { 
         margin: 0; 
-        size: auto; 
+        size: A4; 
     }
 }
 

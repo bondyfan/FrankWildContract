@@ -76,4 +76,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Init
     updateContract();
+
+    // Paginace (rozdělení na stránky)
+    function paginate() {
+        const source = get('contractSource');
+        const container = get('pagesContainer');
+        if (!source || !container) return;
+
+        // Vyčistit kontejner
+        container.innerHTML = '';
+
+        // Vytvořit první stránku
+        let currentPage = createNewPage();
+        container.appendChild(currentPage);
+
+        // Projít všechny elementy ve zdroji
+        const children = Array.from(source.children);
+        
+        children.forEach(child => {
+            // Naklonovat element (aby zůstal ve zdroji pro příští update)
+            const clone = child.cloneNode(true);
+            currentPage.appendChild(clone);
+
+            // Zkontrolovat, zda se element vejde
+            // 297mm (A4 výška) - 40mm (padding nahoře a dole) = cca 257mm
+            // V pixelech: 297mm * 3.78 = 1122px. 40mm * 3.78 = 151px. 1122 - 151 = 971px (bezpečný limit)
+            // Pro jistotu dáme menší limit, např. 950px
+            
+            if (currentPage.scrollHeight > currentPage.clientHeight) {
+                // Element se nevešel, odebrat ho z této stránky
+                currentPage.removeChild(clone);
+                
+                // Vytvořit novou stránku
+                currentPage = createNewPage();
+                container.appendChild(currentPage);
+                
+                // Přidat element na novou stránku
+                currentPage.appendChild(clone);
+            }
+        });
+
+        // Přidat číslování stránek
+        const pages = container.querySelectorAll('.a4-page');
+        const totalPages = pages.length;
+        
+        pages.forEach((page, index) => {
+            const pageNum = document.createElement('div');
+            pageNum.className = 'page-number';
+            pageNum.innerText = `Strana ${index + 1} z ${totalPages}`;
+            page.appendChild(pageNum);
+        });
+    }
+
+    function createNewPage() {
+        const div = document.createElement('div');
+        div.className = 'a4-page mb-8'; // mb-8 pro mezeru mezi stránkami v náhledu
+        return div;
+    }
+
+    // Spustit paginaci při každé změně
+    const originalUpdateContract = updateContract;
+    // Přepsat updateContract aby volal i paginaci
+    // Musíme to udělat opatrně, aby se necyklilo volání
+    
+    // Nový observer pro sledování změn ve zdrojovém kontejneru by byl ideální,
+    // ale pro jednoduchost zavoláme paginaci po updateContract
+    
+    // Upravíme listenery, aby volaly paginate
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+             // Původní logika už běží v updateContract, která je navázaná, ale my chceme volat i paginate
+             setTimeout(paginate, 10); // Malé zpoždění pro překreslení DOM
+        });
+        input.addEventListener('change', () => {
+             setTimeout(paginate, 10);
+        });
+    });
+
+    // Prvotní spuštění
+    setTimeout(paginate, 100);
+
 });
