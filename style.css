@@ -48,12 +48,6 @@
     z-index: 1;
 }
 
-/* Zarovnání textu do bloku */
-.text-justify {
-    text-align: justify;
-    text-justify: inter-word;
-}
-
 /* Styly pro tisk (PDF Export) */
 @media print {
     body { 
