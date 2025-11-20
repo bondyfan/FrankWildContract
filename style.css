@@ -14,6 +14,8 @@
     /* Ensure content doesn't fly out if it gets too long */
     height: auto; 
     overflow: visible;
+    word-wrap: break-word;
+    box-sizing: border-box;
 }
 
 /* Styly pro vyplněná data v náhledu */
