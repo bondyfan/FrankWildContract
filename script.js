@@ -216,9 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const clone = child.cloneNode(true);
             
             // Pokud je element skrytý (např. sekce nezletilý), nepřidávat ho pokud je display none
-            // Musíme zkontrolovat computed style, protože display:none může být v CSS třídě nebo inline
-            const style = window.getComputedStyle(child);
-            if (style.display === 'none') {
+            // Použijeme inline style, protože getComputedStyle může blbnout uvnitř skrytého rodiče
+            if (child.style.display === 'none') {
                 return; 
             }
 
