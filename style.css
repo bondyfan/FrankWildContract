@@ -1,0 +1,72 @@
+/* Styly pro papír A4 */
+.a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm;
+    margin: 40px auto;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    line-height: 1.3;
+    font-size: 12pt;
+    position: relative;
+    /* Ensure content doesn't fly out if it gets too long */
+    height: auto; 
+    overflow: visible;
+}
+
+/* Styly pro vyplněná data v náhledu */
+.filled-data {
+    color: #000;
+    font-weight: bold;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+}
+
+/* Styly pro tisk (PDF Export) */
+@media print {
+    body { 
+        background: white; 
+        height: auto;
+        overflow: visible;
+    }
+    .no-print { 
+        display: none !important; 
+    } /* Skryje ovládací panel */
+    
+    /* Reset pro hlavní kontejner, aby neblokoval tisk */
+    #previewContainer {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        background: white;
+        display: block;
+        padding: 0;
+        margin: 0;
+    }
+
+    .a4-page {
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+        box-shadow: none;
+        padding: 20mm;
+        border: none;
+    }
+    
+    .filled-data {
+        text-decoration: none; /* Při tisku zrušíme tečkované podtržení */
+    }
+    
+    @page { 
+        margin: 0; 
+        size: auto; 
+    }
+}
+
+/* Vlastní posuvník */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #2d3748; }
+::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 4px; }
