@@ -7,14 +7,47 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-800 h-screen flex overflow-hidden">
+<body class="bg-gray-800 h-screen flex overflow-hidden relative">
+
+    <!-- SELECTION SCREEN -->
+    <div id="selectionScreen" class="absolute inset-0 bg-gray-900 z-50 flex flex-col items-center justify-center text-white">
+        <h1 class="text-4xl font-bold text-yellow-400 mb-8">Generátor smluv Frank Wild</h1>
+        <p class="text-gray-400 mb-8 text-lg">Vyberte typ smlouvy, kterou chcete vytvořit:</p>
+        
+        <div class="flex gap-6">
+            <button onclick="selectContract('A')" class="w-64 h-40 bg-gray-800 hover:bg-gray-700 border-2 border-gray-600 hover:border-yellow-400 rounded-xl flex flex-col items-center justify-center p-6 transition group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 text-blue-400 group-hover:text-yellow-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span class="font-bold text-lg text-center">Smlouva o spolupráci</span>
+            </button>
+
+            <button onclick="selectContract('B')" class="w-64 h-40 bg-gray-800 hover:bg-gray-700 border-2 border-gray-600 hover:border-yellow-400 rounded-xl flex flex-col items-center justify-center p-6 transition group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 text-purple-400 group-hover:text-yellow-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="font-bold text-lg text-center">Model Release</span>
+                <span class="text-xs text-gray-500 mt-1">Souhlas s užitím podobizny</span>
+            </button>
+        </div>
+    </div>
 
     <!-- LEVÝ PANEL: OVLÁDÁNÍ -->
     <div class="w-1/3 bg-gray-900 text-white p-6 overflow-y-auto no-print flex flex-col shadow-xl z-10">
-        <h2 class="text-2xl font-bold text-yellow-400 mb-1">Frank Wild</h2>
-        <p class="text-gray-400 text-sm mb-6">Generátor smluv v2.0 (Rozšířený)</p>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-yellow-400 mb-1">Frank Wild</h2>
+                <p class="text-gray-400 text-sm" id="appTitle">Generátor smluv v2.0</p>
+            </div>
+            <button onclick="location.reload()" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded border border-gray-600 text-gray-400 hover:text-white transition">
+                Změnit smlouvu
+            </button>
+        </div>
 
-        <!-- Údaje o Příjemci -->
+        <!-- OVLÁDÁNÍ: SMLOUVA O SPOLUPRÁCI (A) -->
+        <div id="controls-contract-a">
+            <!-- Údaje o Příjemci -->
         <div class="space-y-4 mb-8 border-b border-gray-700 pb-6">
             <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm">1. Příjemce (Ten druhý)</h3>
             
@@ -120,6 +153,80 @@
             </div>
         </div>
 
+        <!-- OVLÁDÁNÍ: MODEL RELEASE (B) -->
+        <div id="controls-contract-b" style="display: none;">
+            
+            <div class="space-y-4 mb-8 border-b border-gray-700 pb-6">
+                <h3 class="text-lg font-semibold text-purple-300 uppercase tracking-wider text-sm">1. Projekt</h3>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Název projektu</label>
+                    <input type="text" id="inpBProject" placeholder="např. Focení kolekce Léto" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Datum natáčení/focení</label>
+                    <input type="text" id="inpBDateShoot" placeholder="např. 20. 11. 2025" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8 border-b border-gray-700 pb-6">
+                <h3 class="text-lg font-semibold text-purple-300 uppercase tracking-wider text-sm">2. Model</h3>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Jméno a příjmení</label>
+                    <input type="text" id="inpBName" placeholder="např. Eva Krátká" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Datum narození</label>
+                    <input type="text" id="inpBDob" placeholder="např. 5. 5. 2001" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Číslo OP</label>
+                    <input type="text" id="inpBId" placeholder="např. 123456789" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Trvalé bydliště</label>
+                    <input type="text" id="inpBAddress" placeholder="např. Krátká 1, Brno" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <h3 class="text-lg font-semibold text-purple-300 uppercase tracking-wider text-sm">3. Nezletilost (volitelné)</h3>
+                
+                <label class="flex items-center gap-3 cursor-pointer hover:text-yellow-300 transition mb-4">
+                    <input type="checkbox" id="checkMinor" class="w-5 h-5 accent-yellow-500" onchange="toggleMinorFields()">
+                    <span>Model je nezletilý (< 18 let)</span>
+                </label>
+
+                <div id="minorFields" class="space-y-4 pl-4 border-l-2 border-gray-700" style="display: none;">
+                    <p class="text-xs text-gray-500 mb-2">Údaje zákonného zástupce:</p>
+                    
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Jméno zástupce</label>
+                        <input type="text" id="inpBGuardianName" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Číslo OP zástupce</label>
+                        <input type="text" id="inpBGuardianId" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                    </div>
+
+                     <div>
+                        <label class="block text-sm text-gray-400 mb-1">Vztah k dítěti</label>
+                        <select id="inpBGuardianRel" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
+                            <option value="otec">Otec</option>
+                            <option value="matka">Matka</option>
+                            <option value="opatrovník">Opatrovník</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button onclick="window.print()" class="mt-auto w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -134,7 +241,9 @@
         <!-- Hidden source for pagination -->
         <div id="contractSource" style="display: none;">
             
-            <!-- Hlavička smlouvy -->
+            <!-- SOURCE A: SPOLUPRÁCE -->
+            <div id="source-contract-a">
+                <!-- Hlavička smlouvy -->
             <div class="text-center mb-8">
                 <h1 class="font-bold text-xl uppercase mb-2">Smlouva o spolupráci a podílu na výnosech</h1>
                 <p class="italic text-sm">uzavřená dle zákona č. 89/2012 Sb., občanský zákoník</p>
@@ -239,6 +348,103 @@
                         (Příjemce)
                     </div>
                 </div>
+            </div>
+
+            <!-- SOURCE B: MODEL RELEASE -->
+            <div id="source-contract-b" style="display: none;">
+                
+                <div class="text-center mb-8">
+                    <h1 class="font-bold text-xl uppercase mb-2">Model Release Form</h1>
+                    <h2 class="font-bold text-lg mb-4">Souhlas s užitím podobizny</h2>
+                </div>
+
+                <div class="mb-6">
+                    <p><strong>Název projektu:</strong> <span id="outBProject" class="filled-data">...........................</span></p>
+                    <p><strong>Datum natáčení:</strong> <span id="outBDateShoot" class="filled-data">...........................</span></p>
+                </div>
+
+                <div class="mb-6 text-justify leading-relaxed">
+                    <p class="mb-4">
+                        Bez protiplnění já, <span id="outBNameText" class="filled-data font-bold">________________________________</span> níže podepsaná (dále jen "model"), tímto uděluji fyzické osobě <strong>František Divoký</strong> (rodné číslo: 960105/3561) (dále jen "fotograf") a osobám, které jednají s autoritou a svolením Fotografa, právo pořizovat a vytvářet videozáznamy a další statické a/nebo pohyblivé obrazy ve všech formátech a další grafická zobrazení zahrnující moji osobu v jakékoliv podobě a ve všech médiích, ať už jimž známých nebo později vytvořených (dále jen „obsah“).
+                    </p>
+                    <p class="mb-4">
+                        Tímto souhlasím, že všechna práva na obsah, včetně autorských práv, jsou a zůstanou výlučným vlastnictvím Fotografa, bez jakýchkoliv nároků z naší strany mě nebo kohokoliv jednajícího mým jménem.
+                    </p>
+                    <p class="mb-4">
+                        Práva fotografa zahrnují, ale nejsou omezena, následující práva, a to na stálou dobu: užívat, opakovaně užívat, publikovat, opětovně publikovat, pořizovat a veřejně zobrazovat Obsah; měnit, přetvářet nebo jinak měnit Obsah jakýmikoliv prostředky, které si Fotograf přeje; kombinovat obsah s textem a/nebo s jinými obrazy a/nebo médii; ve spojení s jakýmikoliv jmény, bez omezení, nebo s fiktivními jmény; a využívat Obsah i včetně případné změny nebo úpravy, pro reklamu, propagaci, merchandising a jakékoliv další legální použití, a to v jakémkoliv jménu účelu.
+                    </p>
+                    <p class="mb-4">
+                        Tímto (i) uvolňuji, vyučuji a souhlasím s jakýmikoliv nároky Fotografa, dědice Fotografa, zákonné zástupce a další osoby jednající s jeho pověřením: Fotograf má právo na osoby, za které jednají, s použitím Obsahu, a zveřejnění Obsahu včetně mé osoby v něm (ii) vzdávám se práv na jakékoliv budoucí odškodnění nebo jiných úprav v právem v souladu s užitím. Beru na vědomí, že Fotograf není povinen obsah použít, ale pokud se rozhodne obsah použít, nebude tím měněna jakákoli záležitost, kterou bych mohl použít v souvislosti s mým sobě stačejícím výlučným právem tento obsah použít.
+                    </p>
+                    <p class="mb-4">
+                        Prohlašuji a zaručuji, že jsem důkladně analyzoval výše uvedené oprávnění, oznámení a souhlas, a v plném rozsahu akceptuji všechny podmínky. Dále potvrzuji, že jsem si plně vědom skutečnosti, že Fotograf má výlučná, trvalá a neodvolatelná práva na využití mého obrazu bez jakýchkoli budoucích nároků či požadavků z mé strany.
+                    </p>
+                </div>
+
+                <div class="mt-8 mb-8 border-t-2 border-black pt-4">
+                    <h3 class="font-bold mb-4 uppercase underline">MODEL:</h3>
+                    
+                    <div class="grid grid-cols-2 gap-8 mb-4">
+                        <div>
+                            <strong>Jméno a Příjmení:</strong><br>
+                            <span id="outBName" class="filled-data">........................................</span>
+                        </div>
+                        <div>
+                            <strong>Datum Narození:</strong><br>
+                            <span id="outBDob" class="filled-data">........................................</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8 mb-4">
+                        <div>
+                            <strong>Číslo občanského průkazu:</strong><br>
+                            <span id="outBId" class="filled-data">........................................</span>
+                        </div>
+                        <div>
+                            <strong>Trvalým pobytem:</strong><br>
+                            <span id="outBAddress" class="filled-data">........................................</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <strong>Datum a podpis:</strong> ...........................................................................
+                    </div>
+                </div>
+
+                <!-- Sekce pro nezletilé -->
+                <div id="outBMinorSection" style="display: none;" class="mt-8 border-t-2 border-black pt-4 bg-gray-50 p-4">
+                    <h3 class="font-bold mb-2 uppercase underline">V PŘÍPADĚ NEZLETILOSTI:</h3>
+                    <p class="text-sm mb-4 italic">
+                        Zaručuji a prohlašuji, že jsem <strong id="outBGuardianRel">otec/matka/opatrovník</strong> modela výše zmíněného. Přečetl jsem si výše uvedená vydání a uděluji svůj nedovolatelný souhlas s veškerým jeho obsahem. Zaručuji a prohlašuji, že toto vydání je vydáno jménem nezletilého a všeho jeho zákonných zástupců a je závazné pro něj a jeho dědice a postupníky.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-8 mb-4">
+                        <div>
+                            <strong>Jméno a Příjmení zástupce:</strong><br>
+                            <span id="outBGuardianName" class="filled-data">........................................</span>
+                        </div>
+                        <div>
+                            <strong>Datum Narození:</strong><br>
+                            <span class="text-gray-400 text-xs">(nevyžadováno v zadání, ale obvyklé)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 mb-4">
+                        <div>
+                            <strong>Číslo občanského průkazu:</strong><br>
+                            <span id="outBGuardianId" class="filled-data">........................................</span>
+                        </div>
+                        <div>
+                            <strong>Trvale pobytem:</strong><br>
+                            <span class="text-gray-400 text-xs">(shodné s modelem)</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <strong>Datum a podpis zástupce:</strong> ...........................................................................
+                    </div>
+                </div>
+
             </div>
 
         </div>

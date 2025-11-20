@@ -8,8 +8,51 @@ document.addEventListener('DOMContentLoaded', () => {
     if (outDate) outDate.innerText = today;
 
 
+    // Proměnná pro aktuální typ smlouvy
+    let currentContractType = 'A';
+
+    // Funkce pro výběr smlouvy
+    window.selectContract = function(type) {
+        currentContractType = type;
+        
+        // Skrýt výběrovou obrazovku
+        get('selectionScreen').style.display = 'none';
+        
+        // Zobrazit správné ovládací prvky
+        get('controls-contract-a').style.display = type === 'A' ? 'block' : 'none';
+        get('controls-contract-b').style.display = type === 'B' ? 'block' : 'none';
+        
+        // Zobrazit správný zdroj pro náhled
+        get('source-contract-a').style.display = type === 'A' ? 'block' : 'none';
+        get('source-contract-b').style.display = type === 'B' ? 'block' : 'none';
+        
+        // Aktualizovat titulek
+        get('appTitle').innerText = type === 'A' ? 'Generátor smluv v2.0 (Spolupráce)' : 'Generátor smluv v2.0 (Model Release)';
+        
+        // Spustit update
+        updateContract();
+    }
+
+    // Funkce pro přepínání polí pro nezletilé
+    window.toggleMinorFields = function() {
+        const isMinor = get('checkMinor').checked;
+        get('minorFields').style.display = isMinor ? 'block' : 'none';
+        get('outBMinorSection').style.display = isMinor ? 'block' : 'none';
+        updateContract();
+    }
+
     // Hlavní funkce aktualizace
     function updateContract() {
+        if (currentContractType === 'A') {
+            updateContractA();
+        } else {
+            updateContractB();
+        }
+        // Po aktualizaci dat spustit paginaci (s malým zpožděním)
+        setTimeout(paginate, 50);
+    }
+
+    function updateContractA() {
         // Zjistit typ osoby
         const isCompany = document.querySelector('input[name="entityType"][value="company"]').checked;
 
@@ -103,6 +146,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateContractB() {
+        get('outBProject').innerText = get('inpBProject').value || "...........................";
+        get('outBDateShoot').innerText = get('inpBDateShoot').value || "...........................";
+        
+        const name = get('inpBName').value;
+        get('outBName').innerText = name || "........................................";
+        get('outBNameText').innerText = name || "________________________________";
+        
+        get('outBDob').innerText = get('inpBDob').value || "........................................";
+        get('outBId').innerText = get('inpBId').value || "........................................";
+        get('outBAddress').innerText = get('inpBAddress').value || "........................................";
+
+        // Nezletilý
+        if (get('checkMinor').checked) {
+            get('outBGuardianName').innerText = get('inpBGuardianName').value || "........................................";
+            get('outBGuardianId').innerText = get('inpBGuardianId').value || "........................................";
+            
+            const relSelect = get('inpBGuardianRel');
+            get('outBGuardianRel').innerText = relSelect.options[relSelect.selectedIndex].text.toLowerCase();
+        }
+    }
+
 
     function updateCheckbox(inputId, outputId) {
         const isChecked = get(inputId).checked;
@@ -112,20 +177,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Listenery
-    const inputs = document.querySelectorAll('input');
+    // Poznámka: inputy jsou nyní vybírány dynamicky, ale protože jsou v DOMu od začátku (jen skryté),
+    // můžeme na ně navázat listenery rovnou.
+    const inputs = document.querySelectorAll('input, select');
     inputs.forEach(input => {
+        // Pro jistotu odstraníme staré listenery (pokud by se skript spouštěl vícekrát, což tady nehrozí, ale je to good practice)
+        input.removeEventListener('input', updateContract);
+        input.removeEventListener('change', updateContract);
+        
         input.addEventListener('input', updateContract);
         input.addEventListener('change', updateContract);
     });
 
-
-    // Init
-    updateContract();
-
     // Paginace (rozdělení na stránky)
     function paginate() {
-        const source = get('contractSource');
+        // Zdroj je nyní dynamický podle typu smlouvy, ale my bereme #contractSource wrapper
+        // Uvnitř #contractSource jsou #source-contract-a a #source-contract-b.
+        // Musíme vzít ten viditelný.
+        
+        let activeSourceId = currentContractType === 'A' ? 'source-contract-a' : 'source-contract-b';
+        const source = get(activeSourceId);
         const container = get('pagesContainer');
+        
         if (!source || !container) return;
 
         // Vyčistit kontejner
@@ -135,19 +208,23 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentPage = createNewPage();
         container.appendChild(currentPage);
 
-        // Projít všechny elementy ve zdroji
+        // Projít všechna elementy ve zdroji
         const children = Array.from(source.children);
         
         children.forEach(child => {
             // Naklonovat element (aby zůstal ve zdroji pro příští update)
             const clone = child.cloneNode(true);
+            
+            // Pokud je element skrytý (např. sekce nezletilý), nepřidávat ho pokud je display none
+            // Musíme zkontrolovat computed style, protože display:none může být v CSS třídě nebo inline
+            const style = window.getComputedStyle(child);
+            if (style.display === 'none') {
+                return; 
+            }
+
             currentPage.appendChild(clone);
 
             // Zkontrolovat, zda se element vejde
-            // 297mm (A4 výška) - 40mm (padding nahoře a dole) = cca 257mm
-            // V pixelech: 297mm * 3.78 = 1122px. 40mm * 3.78 = 151px. 1122 - 151 = 971px (bezpečný limit)
-            // Pro jistotu dáme menší limit, např. 950px
-            
             if (currentPage.scrollHeight > currentPage.clientHeight) {
                 // Element se nevešel, odebrat ho z této stránky
                 currentPage.removeChild(clone);
@@ -178,25 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = 'a4-page mb-8'; // mb-8 pro mezeru mezi stránkami v náhledu
         return div;
     }
-
-    // Spustit paginaci při každé změně
-    const originalUpdateContract = updateContract;
-    // Přepsat updateContract aby volal i paginaci
-    // Musíme to udělat opatrně, aby se necyklilo volání
-    
-    // Nový observer pro sledování změn ve zdrojovém kontejneru by byl ideální,
-    // ale pro jednoduchost zavoláme paginaci po updateContract
-    
-    // Upravíme listenery, aby volaly paginate
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-             // Původní logika už běží v updateContract, která je navázaná, ale my chceme volat i paginate
-             setTimeout(paginate, 10); // Malé zpoždění pro překreslení DOM
-        });
-        input.addEventListener('change', () => {
-             setTimeout(paginate, 10);
-        });
-    });
 
     // Prvotní spuštění
     setTimeout(paginate, 100);
