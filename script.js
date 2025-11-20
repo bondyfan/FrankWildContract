@@ -132,6 +132,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 sourceDiv.innerHTML = "KOMPLETNÍ DIGITÁLNÍ VÝNOSY<br><span style='font-weight:normal'>Výnosy ze všech digitálních zdrojů (YouTube, Spotify, Apple Music a další video i audio platformy).</span>";
             }
 
+            // Způsob vyplácení
+            const paymentRadios = document.getElementsByName('paymentMethod');
+            let paymentMethod = "bank";
+            for (const radio of paymentRadios) {
+                if (radio.checked) paymentMethod = radio.value;
+            }
+
+            const divBankAccount = get('divBankAccount');
+            const rowBankAccount = get('rowBankAccount');
+            
+            if (paymentMethod === 'bank') {
+                divBankAccount.style.display = 'block';
+                rowBankAccount.style.display = 'block';
+                get('outPaymentMethod').innerText = 'Bankovním převodem';
+                get('outBankAccount').innerText = get('inpBankAccount').value || '........................................';
+            } else {
+                divBankAccount.style.display = 'none';
+                rowBankAccount.style.display = 'none';
+                get('outPaymentMethod').innerText = 'V hotovosti';
+            }
+
+            // Fakturace
+            const invoiceRequired = get('checkInvoiceRequired').checked;
+            const rowInvoiceRequired = get('rowInvoiceRequired');
+            const numContinuation = get('numContinuation');
+            const numDuration = get('numDuration');
+            
+            if (invoiceRequired) {
+                rowInvoiceRequired.style.display = 'block';
+                numContinuation.innerHTML = numContinuation.innerHTML.replace(/^\d+\./, '6.');
+                numDuration.innerHTML = numDuration.innerHTML.replace(/^\d+\./, '7.');
+            } else {
+                rowInvoiceRequired.style.display = 'none';
+                numContinuation.innerHTML = numContinuation.innerHTML.replace(/^\d+\./, '5.');
+                numDuration.innerHTML = numDuration.innerHTML.replace(/^\d+\./, '6.');
+            }
+
         } else {
             // --- MODEL RELEASE ---
             
@@ -159,6 +196,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 guardianDiv.style.display = 'none';
                 outMinorSection.style.display = 'none';
             }
+
+            // Odměna
+            const hasPayment = get('checkMRPayment').checked;
+            const divMRPayment = get('divMRPayment');
+            const outMRPaymentSection = get('outMRPaymentSection');
+            const outMRNoPaymentClause = get('outMRNoPaymentClause');
+            const outMRPaymentPrefix = get('outMRPaymentPrefix');
+
+            if (hasPayment) {
+                divMRPayment.style.display = 'block';
+                outMRPaymentSection.style.display = 'block';
+                outMRNoPaymentClause.style.display = 'none';
+                outMRPaymentPrefix.innerText = 'Za níže uvedené protiplnění';
+
+                // Vyplnit data
+                get('outMRAmount').innerText = get('inpMRAmount').value || ".....";
+                get('outMRCurrency').innerText = get('inpMRCurrency').value || "CZK";
+                get('outMRBankAccount').innerText = get('inpMRBankAccount').value || "........................................";
+
+                // Termín vyplacení
+                const timingRadios = document.getElementsByName('mrPaymentTiming');
+                let timing = 'immediately';
+                for (const radio of timingRadios) {
+                    if (radio.checked) timing = radio.value;
+                }
+
+                const timingEl = get('outMRPaymentTiming');
+                if (timing === 'immediately') {
+                    timingEl.innerHTML = 'Termín vyplacení: <strong>Okamžitě</strong>';
+                } else if (timing === 'days') {
+                    const days = get('inpMRDays').value || '...';
+                    timingEl.innerHTML = `Termín vyplacení: <strong>Do ${days} dní</strong>`;
+                } else if (timing === 'release') {
+                    const days = get('inpMRReleaseDays').value || '...';
+                    timingEl.innerHTML = `Termín vyplacení: <strong>Maximálně ${days} dní po vydání díla na YouTube nebo audio platformách</strong>`;
+                }
+            } else {
+                divMRPayment.style.display = 'none';
+                outMRPaymentSection.style.display = 'none';
+                outMRNoPaymentClause.style.display = 'block';
+                outMRPaymentPrefix.innerText = 'Bez protiplnění';
+            }
+
+            // Poznámka
+            const note = get('inpMRNote').value;
+            const outMRNoteSection = get('outMRNoteSection');
+            const outMRNote = get('outMRNote');
+
+            if (note && note.trim()) {
+                outMRNoteSection.style.display = 'block';
+                outMRNote.innerText = note;
+            } else {
+                outMRNoteSection.style.display = 'none';
+            }
         }
 
         // Spustit paginaci
@@ -177,10 +268,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Listenery
-    const inputs = document.querySelectorAll('input');
+    const inputs = document.querySelectorAll('input, textarea, select');
     inputs.forEach(input => {
         input.addEventListener('input', updateContract);
         input.addEventListener('change', updateContract);
+    });
+
+    // Specifický listener pro změnu způsobu platby
+    const paymentRadios = document.getElementsByName('paymentMethod');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', updateContract);
+    });
+
+    // Specifický listener pro MR payment timing
+    const mrPaymentTimingRadios = document.getElementsByName('mrPaymentTiming');
+    mrPaymentTimingRadios.forEach(radio => {
+        radio.addEventListener('change', updateContract);
     });
 
 

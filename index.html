@@ -179,6 +179,38 @@
                         </label>
                     </div>
                 </div>
+
+                <!-- Způsob vyplácení -->
+                <div>
+                    <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm mb-2">5. Způsob vyplácení</h3>
+                    <div class="space-y-3">
+                        <div class="flex gap-4 text-sm bg-neutral-800 p-2 rounded">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="bank" checked class="accent-yellow-500">
+                                <span>Na účet</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="cash" class="accent-yellow-500">
+                                <span>V hotovosti</span>
+                            </label>
+                        </div>
+                        
+                        <div id="divBankAccount">
+                            <label class="block text-sm text-gray-400 mb-1">Číslo účtu</label>
+                            <input type="text" id="inpBankAccount" placeholder="např. 123456789/0100"
+                                class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm focus:border-yellow-400 outline-none transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fakturace -->
+                <div>
+                    <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm mb-2">6. Fakturace</h3>
+                    <label class="flex items-center gap-3 cursor-pointer hover:text-yellow-300 transition bg-neutral-800 p-3 rounded">
+                        <input type="checkbox" id="checkInvoiceRequired" class="w-5 h-5 accent-yellow-500">
+                        <span class="text-sm">Vyplácení jen po poskytnutí faktury</span>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -201,11 +233,11 @@
                 </div>
             </div>
 
-            <div class="mb-8">
+            <div class="mb-8 border-b border-gray-700 pb-6">
                 <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm mb-2">3. Nezletilost
                 </h3>
                 <label
-                    class="flex items-center gap-3 cursor-pointer hover:text-yellow-300 transition bg-gray-800 p-3 rounded">
+                    class="flex items-center gap-3 cursor-pointer hover:text-yellow-300 transition bg-neutral-800 p-3 rounded">
                     <input type="checkbox" id="checkMinor" class="w-5 h-5 accent-yellow-500">
                     <span>Model je nezletilý (pod 18 let)</span>
                 </label>
@@ -214,11 +246,76 @@
                     <p class="text-sm text-yellow-400 mb-2">Zákonný zástupce:</p>
                     <div class="space-y-3">
                         <input type="text" id="inpGuardianName" placeholder="Jméno zástupce"
-                            class="w-full bg-gray-800 border border-gray-600 rounded p-2 text-sm">
+                            class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm">
                         <input type="text" id="inpGuardianId" placeholder="Číslo OP zástupce"
-                            class="w-full bg-gray-800 border border-gray-600 rounded p-2 text-sm">
+                            class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm">
                     </div>
                 </div>
+            </div>
+
+            <!-- Odměna -->
+            <div class="mb-8 border-b border-gray-700 pb-6">
+                <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm mb-2">4. Odměna (volitelné)</h3>
+                <label class="flex items-center gap-3 cursor-pointer hover:text-yellow-300 transition bg-neutral-800 p-3 rounded mb-4">
+                    <input type="checkbox" id="checkMRPayment" class="w-5 h-5 accent-yellow-500">
+                    <span>Vyplatit odměnu</span>
+                </label>
+
+                <div id="divMRPayment" class="space-y-4 pl-4 border-l-2 border-yellow-500" style="display: none;">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-1">Částka</label>
+                            <input type="number" id="inpMRAmount" placeholder="např. 5000"
+                                class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm focus:border-yellow-400 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-1">Měna</label>
+                            <select id="inpMRCurrency" class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm focus:border-yellow-400 outline-none transition">
+                                <option value="CZK">CZK</option>
+                                <option value="EUR">EUR</option>
+                                <option value="USD">USD</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Číslo účtu</label>
+                        <input type="text" id="inpMRBankAccount" placeholder="např. 123456789/0100"
+                            class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm focus:border-yellow-400 outline-none transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Kdy se vyplácí?</label>
+                        <div class="space-y-2 text-sm">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="mrPaymentTiming" value="immediately" checked class="accent-yellow-500">
+                                <span>Okamžitě</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="mrPaymentTiming" value="days" class="accent-yellow-500">
+                                <span>Do</span>
+                                <input type="number" id="inpMRDays" placeholder="30" 
+                                    class="w-16 bg-neutral-800 border border-neutral-600 rounded p-1 text-center text-sm">
+                                <span>dní</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="mrPaymentTiming" value="release" class="accent-yellow-500">
+                                <span>Max</span>
+                                <input type="number" id="inpMRReleaseDays" placeholder="30" 
+                                    class="w-16 bg-neutral-800 border border-neutral-600 rounded p-1 text-center text-sm">
+                                <span>dní po vydání díla</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Poznámka / Speciální podmínky -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm mb-2">5. Poznámka / Speciální podmínky</h3>
+                <p class="text-xs text-gray-400 mb-2">Volitelné - přidejte vlastní text, který se objeví ve smlouvě</p>
+                <textarea id="inpMRNote" rows="4" placeholder="např. Model souhlasí s použitím záběrů i v budoucích projektech..."
+                    class="w-full bg-neutral-800 border border-neutral-600 rounded p-2 text-sm focus:border-yellow-400 outline-none transition resize-vertical"></textarea>
             </div>
         </div>
 
@@ -335,9 +432,33 @@
             <!-- IV. Vyplácení -->
             <div class="mb-6">
                 <h2 class="font-bold uppercase text-sm bg-gray-100 p-1 mb-2">IV. Vyplácení a trvání</h2>
-                <p>1. Vyúčtování probíhá pololetně nebo po dosažení zisku min. 1 000 Kč.</p>
-                <p>2. Odměna bude zasílána na účet sdělený Příjemcem.</p>
-                <p>3. Smlouva se uzavírá na dobu neurčitou.</p>
+                <p>1. Vyúčtování probíhá každé 3 měsíce (čtvrtletně).</p>
+                <p>2. Minimální vyplacená částka je 1 000 Kč. Pokud podíl Příjemce za dané období nedosáhne této částky, nevyplácí se a kumuluje se do dalšího období, dokud není dosaženo minimální částky 1 000 Kč.</p>
+                <p>3. Odměna musí být vyplacena do 4 měsíců od konce vyúčtovacího období.</p>
+                <p>4. Způsob vyplácení: <span id="outPaymentMethod" class="filled-data">........................................</span></p>
+                <p id="rowBankAccount" style="padding-left: 20px;">Číslo účtu: <span id="outBankAccount" class="filled-data">........................................</span></p>
+                <p id="rowInvoiceRequired" style="display: none;">5. Vyplácení je podmíněno poskytnutím faktury ze strany Příjemce.</p>
+                <p id="numContinuation">5. Příjemce má právo 1x ročně nahlédnout do účetnictví Poskytovatele, konkrétně do platformy agentury/distributora, kde jsou viditelné výnosy z díla, za účelem ověření správnosti vyúčtování.</p>
+                <p id="numDuration">6. Smlouva se uzavírá na dobu neurčitou.</p>
+            </div>
+
+            <!-- V. Ukončení smlouvy -->
+            <div class="mb-6">
+                <h2 class="font-bold uppercase text-sm bg-gray-100 p-1 mb-2">V. Ukončení smlouvy</h2>
+                <p>1. Smlouva může být ukončena:</p>
+                <p style="padding-left: 20px;">a) <strong>Oboustrannou dohodou</strong> smluvních stran kdykoliv.</p>
+                <p style="padding-left: 20px;">b) <strong>Okamžitým odstoupením</strong> při porušení podmínek smlouvy, zejména pokud:</p>
+                <p style="padding-left: 40px;">- Příjemce poruší autorská práva nebo zveřejní citlivé informace,</p>
+                <p style="padding-left: 40px;">- Kterákoliv ze stran poruší zákony související s touto smlouvou.</p>
+                <p>2. Při ukončení smlouvy se Příjemci vyplatí veškerý dosud nevyplacený podíl, a to i v případě, že částka nedosahuje minimální hranice 1 000 Kč.</p>
+                <p>3. Po ukončení smlouvy zaniká nárok Příjemce na podíl z výnosů generovaných dílem od data ukončení. Příjemci náleží pouze podíl z výnosů vygenerovaných do data ukončení smlouvy.</p>
+            </div>
+
+            <!-- VI. Dodatky smlouvy -->
+            <div class="mb-6">
+                <h2 class="font-bold uppercase text-sm bg-gray-100 p-1 mb-2">VI. Závěrečná ustanovení</h2>
+                <p>1. Tato smlouva může být obohacena nebo upravena dodatkem či dodatky smlouvy, které musí být schváleny a podepsány oběma smluvními stranami.</p>
+                <p>2. Jakékoliv změny nebo doplnění této smlouvy jsou platné pouze v písemné formě a po podpisu obou stran.</p>
             </div>
 
             <!-- Podpisy -->
@@ -375,10 +496,21 @@
                         class="filled-data">........................................</span></p>
             </div>
 
+            <!-- Odměna (pokud je) -->
+            <div id="outMRPaymentSection" class="mb-6" style="display: none;">
+                <h2 class="font-bold uppercase text-sm bg-gray-100 p-1 mb-2">Odměna</h2>
+                <p>Fotograf se zavazuje vyplatit Modelovi jednorázovou odměnu ve výši:</p>
+                <p style="text-align: center; font-size: 1.2em; margin: 10px 0;">
+                    <strong><span id="outMRAmount" class="filled-data">.....</span> <span id="outMRCurrency" class="filled-data">...</span></strong>
+                </p>
+                <p>Odměna bude vyplacena na účet: <strong><span id="outMRBankAccount" class="filled-data">........................................</span></strong></p>
+                <p id="outMRPaymentTiming">Termín vyplacení: <span class="filled-data">........................................</span></p>
+            </div>
+
             <!-- Text Smlouvy -->
             <div class="mb-6 text-justify text-sm leading-relaxed space-y-4">
-                <p>
-                    Bez protiplnění já, <strong><span id="outMRName"
+                <p id="outMRIntroText">
+                    <span id="outMRPaymentPrefix">Bez protiplnění</span> já, <strong><span id="outMRName"
                             class="filled-data">........................................</span></strong> níže
                     podepsaná/ý (dále jen "model"), tímto uděluji fyzické osobě <strong>František Divoký</strong> (rodné
                     číslo: 960105/3561) (dále jen "fotograf") a osobám, které jednají s autoritou a svolením Fotografa,
@@ -412,6 +544,15 @@
                     Fotograf má výlučná, trvalá a neodvolatelná práva na využití mého obrazu bez jakýchkoli budoucích
                     nároků či požadavků z mé strany.
                 </p>
+                <p id="outMRNoPaymentClause" style="display: none;">
+                    <strong>Model nemá nárok na žádnou finanční odměnu z tohoto projektu, pokud s Fotografem nemá uzavřenou jinou smlouvu o podílu na výnosech.</strong>
+                </p>
+            </div>
+
+            <!-- Poznámka / Speciální podmínky -->
+            <div id="outMRNoteSection" class="mb-6" style="display: none;">
+                <h2 class="font-bold uppercase text-sm bg-gray-100 p-1 mb-2">Speciální podmínky</h2>
+                <div class="text-sm text-justify" id="outMRNote" style="white-space: pre-wrap;"></div>
             </div>
 
             <!-- Model Info -->
