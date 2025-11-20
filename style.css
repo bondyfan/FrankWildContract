@@ -41,6 +41,13 @@
     text-underline-offset: 3px;
 }
 
+/* Fix pro zobrazení zdroje peněz */
+#outSourceText {
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+}
+
 /* Styly pro tisk (PDF Export) */
 @media print {
     body { 

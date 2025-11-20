@@ -10,6 +10,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hlavní funkce aktualizace
     function updateContract() {
+        // Zjistit typ osoby
+        const isCompany = document.querySelector('input[name="entityType"][value="company"]').checked;
+
+        // Aktualizovat labely podle typu osoby
+        if (isCompany) {
+            // FORM
+            get('lblName').innerText = "Název společnosti";
+            get('lblDob').innerText = "IČO";
+            get('lblIdNumber').innerText = "DIČ (nepovinné) / Spisová značka";
+            get('lblPermanentAddress').innerText = "Sídlo společnosti";
+            get('divCurrentAddress').style.display = 'none';
+            
+            // PREVIEW
+            get('outLblName').innerText = "Název společnosti";
+            get('outLblDob').innerText = "IČO";
+            get('outLblIdNumber').innerText = "DIČ / Spisová značka";
+            get('outLblPermanentAddress').innerText = "Sídlo";
+            get('rowCurrentAddress').style.display = 'none';
+
+            get('inpName').placeholder = "např. Super Label s.r.o.";
+            get('inpDob').placeholder = "např. 12345678";
+            get('inpIdNumber').placeholder = "např. CZ12345678";
+            get('inpPermanentAddress').placeholder = "např. Václavské nám. 1, Praha";
+
+        } else {
+            // FORM
+            get('lblName').innerText = "Jméno a příjmení";
+            get('lblDob').innerText = "Datum narození";
+            get('lblIdNumber').innerText = "Číslo Pasu / Občanky";
+            get('lblPermanentAddress').innerText = "Trvalé bydliště";
+            get('divCurrentAddress').style.display = 'block';
+
+            // PREVIEW
+            get('outLblName').innerText = "Jméno a příjmení";
+            get('outLblDob').innerText = "Datum narození";
+            get('outLblIdNumber').innerText = "Číslo dokladu (OP/Pas)";
+            get('outLblPermanentAddress').innerText = "Trvalé bydliště";
+            get('rowCurrentAddress').style.display = 'inline'; // Span wrapper
+
+            get('inpName').placeholder = "např. Jan Novák";
+            get('inpDob').placeholder = "např. 1. 1. 2000";
+            get('inpIdNumber').placeholder = "např. 123456789";
+            get('inpPermanentAddress').placeholder = "např. Dlouhá 5, Praha";
+        }
+
         // Textová pole
         const name = get('inpName').value;
         get('outName').innerText = name || "........................................";
@@ -54,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (selectedSource === 'B') {
             sourceDiv.innerHTML = "POUZE AUDIO STREAMOVACÍ SLUŽBY<br><span style='font-weight:normal'>Výnosy z digitální distribuce hudby (Spotify, Apple Music, Deezer, Tidal, Amazon Music a další).</span>";
         } else {
-            sourceDiv.innerHTML = "KOMPLETNÍ DIGITÁLNÍ VÝNOSY<br><span style='font-weight:normal'>Zahrnuje všechny výše uvedené platformy (YouTube, Spotify i další streamovací služby).</span>";
+            sourceDiv.innerHTML = "KOMPLETNÍ DIGITÁLNÍ VÝNOSY<br><span style='font-weight:normal'>Výnosy ze všech digitálních zdrojů (YouTube, Spotify, Apple Music a další video i audio platformy).</span>";
         }
     }
 

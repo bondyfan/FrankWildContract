@@ -18,27 +18,39 @@
         <div class="space-y-4 mb-8 border-b border-gray-700 pb-6">
             <h3 class="text-lg font-semibold text-blue-300 uppercase tracking-wider text-sm">1. Příjemce (Ten druhý)</h3>
             
+            <!-- Typ osoby -->
+            <div class="flex gap-4 mb-4 text-sm bg-gray-800 p-2 rounded">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="entityType" value="person" checked class="accent-yellow-500">
+                    <span>Fyzická osoba</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="entityType" value="company" class="accent-yellow-500">
+                    <span>Právnická osoba</span>
+                </label>
+            </div>
+
             <div>
-                <label class="block text-sm text-gray-400 mb-1">Jméno a příjmení</label>
+                <label class="block text-sm text-gray-400 mb-1" id="lblName">Jméno a příjmení</label>
                 <input type="text" id="inpName" placeholder="např. Jan Novák" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
             </div>
             
             <div>
-                <label class="block text-sm text-gray-400 mb-1">Datum narození</label>
+                <label class="block text-sm text-gray-400 mb-1" id="lblDob">Datum narození</label>
                 <input type="text" id="inpDob" placeholder="např. 1. 1. 2000" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
             </div>
             
             <div>
-                <label class="block text-sm text-gray-400 mb-1">Číslo Pasu / Občanky</label>
+                <label class="block text-sm text-gray-400 mb-1" id="lblIdNumber">Číslo Pasu / Občanky</label>
                 <input type="text" id="inpIdNumber" placeholder="např. 123456789" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
             </div>
 
             <div>
-                <label class="block text-sm text-gray-400 mb-1">Trvalé bydliště</label>
+                <label class="block text-sm text-gray-400 mb-1" id="lblPermanentAddress">Trvalé bydliště</label>
                 <input type="text" id="inpPermanentAddress" placeholder="např. Dlouhá 5, Praha" class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
             </div>
 
-            <div>
+            <div id="divCurrentAddress">
                 <label class="block text-sm text-gray-400 mb-1">Aktuální bydliště (kde bydlí teď)</label>
                 <input type="text" id="inpCurrentAddress" placeholder="Pokud je jiné než trvalé..." class="w-full bg-gray-800 border border-gray-600 rounded p-2 focus:border-yellow-400 outline-none transition">
             </div>
@@ -146,11 +158,11 @@
                 <!-- PŘÍJEMCE (DYNAMIC) -->
                 <div>
                     <strong>Příjemce:</strong><br>
-                    Jméno a příjmení: <span id="outName" class="filled-data">........................................</span><br>
-                    Datum narození: <span id="outDob" class="filled-data">........................................</span><br>
-                    Číslo dokladu (OP/Pas): <span id="outIdNumber" class="filled-data">........................................</span><br>
-                    Trvalé bydliště: <span id="outPermanentAddress" class="filled-data">........................................</span><br>
-                    Aktuální bydliště: <span id="outCurrentAddress" class="filled-data">........................................</span><br>
+                    <span id="outLblName"></span>Jméno a příjmení</span>: <span id="outName" class="filled-data">........................................</span><br>
+                    <span id="outLblDob">Datum narození</span>: <span id="outDob" class="filled-data">........................................</span><br>
+                    <span id="outLblIdNumber">Číslo dokladu (OP/Pas)</span>: <span id="outIdNumber" class="filled-data">........................................</span><br>
+                    <span id="outLblPermanentAddress">Trvalé bydliště</span>: <span id="outPermanentAddress" class="filled-data">........................................</span><br>
+                    <span id="rowCurrentAddress">Aktuální bydliště: <span id="outCurrentAddress" class="filled-data">........................................</span><br></span>
                     <em>(dále jen „Příjemce“)</em>
                 </div>
             </div>
